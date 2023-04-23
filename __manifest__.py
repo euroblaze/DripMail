@@ -8,6 +8,9 @@
     'depends': ['mail'],
     'data': [
         'views/views.xml',
+        'views/menu.xml',
+        'data/scheduled_action.xml',
+
     ],
     'installable': True,
     'application': False,
