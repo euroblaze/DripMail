@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="add_to_mini_batch_view_form" model="ir.ui.view">
+            <field name="name">add_to_mini_batch_view_form</field>
+            <field name="model">add.to.chain</field>
+            <field name="arch" type="xml">
+                <form string="Add to Chain">
+                    <group>
+                        <h2>Add to Chain?</h2>
+                        <field name="mail_chain_name"/>
+                    </group>
+                    <footer>
+                        <button name="addtomailchain" id="add_to_mini_batch_button" string="Add to minibatch"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Close" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="add_mail_chain_wiz_form_action" model="ir.actions.act_window">
+            <field name="name">Add to Chain</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">add.to.chain</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="mass_mailing.model_mailing_mailing"/>
+        </record>
+
+    </data>
+</odoo>
