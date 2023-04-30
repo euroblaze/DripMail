@@ -7,7 +7,7 @@
         <field name="res_model">mailing.mailing</field>
         <field name="view_mode">list,kanban,form,activity</field>
         <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
-        <!--            <field name="domain">[('team_id.ref','=','57'),('stage_id.name','=','Cleared'),('added_to_minibatch','=',False)]</field>-->
+        <field name="domain">[('state', 'not in', ['done', 'sending']), ('added_to_chain', '=', False)]</field>
         <field name="search_view_id" ref="mass_mailing.view_mail_mass_mailing_search"/>
     </record>
 

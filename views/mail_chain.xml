@@ -8,11 +8,11 @@
                 <form string="Mail Chain">
                     <header>
                         <button name="activate"
-                                string="Confirm"
+                                string="Activate"
                                 type="object"
                                 class="btn-primary"/>
                         <button name="deactivate"
-                                string="Cancel"
+                                string="Deactivate"
                                 type="object"
                                 class="btn-primary"/>
                     </header>
@@ -28,12 +28,13 @@
                             <field name="description"/>
                         </group>
                         <notebook>
-                            <page string="Mailling" name="claims_tickets">
-                                <field name="mailing_ids" widget="one2many" nolabel="1" readonly="1">
-                                    <tree import="false" string="Claims" editable="bottom" delete="false"
+                            <page string="Mailling" name="Mails">
+                                <field name="mailing_ids" widget="one2many" nolabel="1">
+                                    <tree import="false" string="Mails" editable="bottom" delete="false"
                                           limit="1000">
-
                                         <field string="Name" name="subject" readonly="1"/>
+                                        <field string="Gap" name="gap"/>
+                                        <field string="Sequence" name="sequence"/>
                                         <button name="delete_from_chain" icon="fa-hand-pointer-o"
                                                 class="oe_inline oe_link"
                                                 string="Delete Mail"
@@ -81,12 +82,6 @@
 
             <field name="view_mode">tree,form</field>
         </record>
-
-        <!--                <menuitem name="Chains" id="menu_mailing_chain" parent="drip_marketing_tool_menu_root"-->
-        <!--                  action="add_mail_chain_wiz_form_action"-->
-        <!--                  groups="base.group_user"-->
-        <!--                  sequence="10"/>-->
-
         <menuitem name="Chains" id="menu_mailing_chain" parent="drip_mail_chain.drip_marketing_tool_menu_root"
                   groups="base.group_user"
                   action="action_mailing_chain_action" sequence="10"/>

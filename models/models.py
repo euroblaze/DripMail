@@ -13,18 +13,22 @@ class MailingMailing(models.Model):
     added_to_chain = fields.Boolean('Added to Mail Chain', default=False, tracking=1)
 
     def max_sequence_mailing(self):
-        self.env.cr.execute("SELECT MAX(Sequence) FROM mailing_mailing")
+        self.env.cr.execute("SELECT MAX(sequence) FROM mailing_mailing")
+        print("self.env.cr.fetchall()", self.env.cr.fetchall())
         max_sequence = self.env.cr.fetchall()[0][0]
         if not max_sequence:
             max_sequence = 0
         else:
             max_sequence += 1
+        print("max_sequence", max_sequence)
         return max_sequence
 
     @api.model
     def create(self, vals):
         record = super(MailingMailing, self).create(vals)
+        print(record.sequence)
         record.sequence = self.max_sequence_mailing()
+        print("record sequence", record.sequence)
         return record
 
     def unlink(self):
@@ -34,6 +38,7 @@ class MailingMailing(models.Model):
             for mailing in mailing_mailing:
                 mailing.write({'sequence': mailing.sequence - 1})
         return super(MailingMailing, self).unlink()
+
 
     def delete_from_chain(self):
         self.mail_chain_id = False
@@ -58,20 +63,20 @@ class MailingChain(models.Model):
     def add_to_chain(self):
         if self.mailing_ids:
             for i in self.mailing_ids:
-                i.sudo().with_delay().write({'added_to_chain': True})
+                i.sudo().write({'added_to_chain': True})
         else:
             raise UserError("No Mailings to add to the chain")
 
     def remove_from_chain(self):
         if self.mailing_ids:
             for i in self.mailing_ids:
-                i.sudo().with_delay().write({'added_to_chain': False})
+                i.sudo().write({'added_to_chain': False})
         else:
             raise UserError("No Mailings to remove from the chain")
 
     def send_mail(self):
         if self.mailing_ids:
             for i in self.mailing_ids:
-                i.sudo().with_delay().send_mail()
+                i.sudo().send_mail()
         else:
             raise UserError("No Mailings to send")
