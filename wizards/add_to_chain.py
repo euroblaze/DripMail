@@ -1,7 +1,5 @@
 from odoo import fields, models, api
 from odoo.exceptions import ValidationError
-
-
 # from datetime import date
 
 
@@ -22,8 +20,8 @@ class AddToMailingChain(models.TransientModel):
 
             mini_batch = self.env['mailing.chain'].create({'mailing_ids': tickets.ids,
                                                            'name': self.mail_chain_name})
-            if self.mini_batch_seq:
-                mini_batch.sudo().write({'name': self.mini_batch_seq})
+            if self.mail_chain_name:
+                mini_batch.sudo().write({'name': self.mail_chain_name})
 
             for i in tickets:
                 i.write({'added_to_chain': True})

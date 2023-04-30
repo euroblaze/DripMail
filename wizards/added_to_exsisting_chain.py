@@ -1,6 +1,4 @@
 from odoo import fields, models, api
-
-
 # from odoo.exceptions import ValidationError
 # from datetime import date
 
@@ -14,3 +12,4 @@ class AddToExistingMailChain(models.TransientModel):
         self.mailing_chain_name.sudo().write({'mailing_ids': [(4, i) for i in tickets.ids]})
         for i in tickets:
             i.write({'added_to_chain': True})
+

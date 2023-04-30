@@ -12,7 +12,7 @@
                         <field name="mail_chain_name"/>
                     </group>
                     <footer>
-                        <button name="addtomailchain" id="add_to_mini_batch_button" string="Add to minibatch"
+                        <button name="addtomailchain" id="add_to_mini_batch_button" string="Add to Mail Chain"
                                 type="object"
                                 class="btn-primary"/>
                         <button string="Close" class="btn-secondary" special="cancel"/>
@@ -28,6 +28,7 @@
             <field name="res_model">add.to.chain</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
             <field name="binding_model_id" ref="mass_mailing.model_mailing_mailing"/>
         </record>
 

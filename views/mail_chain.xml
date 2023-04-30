@@ -33,10 +33,10 @@
                                     <tree import="false" string="Claims" editable="bottom" delete="false"
                                           limit="1000">
 
-                                        <field string="Corporate" name="subject" readonly="1"/>
+                                        <field string="Name" name="subject" readonly="1"/>
                                         <button name="delete_from_chain" icon="fa-hand-pointer-o"
                                                 class="oe_inline oe_link"
-                                                string="Delete claim"
+                                                string="Delete Mail"
                                                 type="object"/>
                                     </tree>
 
@@ -77,10 +77,18 @@
         <record model="ir.actions.act_window" id="action_mailing_chain_action">
             <field name="name">Mailing Chain</field>
             <field name="res_model">mailing.chain</field>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Mailing Chain" id="menu_mailing_chain" parent="mass_mailing.mass_mailing_mailing_list_menu"
+        <!--                <menuitem name="Chains" id="menu_mailing_chain" parent="drip_marketing_tool_menu_root"-->
+        <!--                  action="add_mail_chain_wiz_form_action"-->
+        <!--                  groups="base.group_user"-->
+        <!--                  sequence="10"/>-->
+
+        <menuitem name="Chains" id="menu_mailing_chain" parent="drip_mail_chain.drip_marketing_tool_menu_root"
+                  groups="base.group_user"
                   action="action_mailing_chain_action" sequence="10"/>
 
 
