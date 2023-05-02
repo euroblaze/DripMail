@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="add_to_existing_mail_chain_view_form" model="ir.ui.view">
+            <field name="name">add_to_existing_mail_chain_view_form</field>
+            <field name="model">add.to.existing.mail.chain</field>
+            <field name="arch" type="xml">
+                <form string="exsis_to_mini">
+                    <group>
+                        <h2>Add to Exsisting Mail Chain?</h2>
+                        <field name="mailing_chain_name" required="1"
+                               options="{'no_open': True, 'no_create': True,'no_edit': True, 'no_create_edit': True}"/>
+                    </group>
+                    <footer>
+                        <button name="addtoexsistingchain" id="add_to_mini_batch_button"
+                                string="Add to Existing Mail Chain" type="object"
+                                class="btn-primary"/>
+                        <button string="Close" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="add_to_exsisting_mail_chain_view_form_action" model="ir.actions.act_window">
+            <field name="name">Add to Existing Mail Chain</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">add.to.existing.mail.chain</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+            <field name="binding_model_id" ref="mass_mailing.model_mailing_mailing"/>
+        </record>
+    </data>
+</odoo>

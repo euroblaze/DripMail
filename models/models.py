@@ -1,54 +1,82 @@
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+from odoo.exceptions import UserError
+# from datetime import date
 
-class DripMarketingChain(models.Model):
-    _name = 'drip.marketing.chain'
-    _description = 'Drip Marketing Chain'
 
-    name = fields.Char(string='Name', required=True)
-    description = fields.Text(string='Description')
-    mailing_list_id = fields.Many2one('mailing.list', string='Mailing List')
+class MailingMailing(models.Model):
+    _inherit = 'mailing.mailing'
+    _order = 'sequence asc'
 
-class DripMarketingEmail(models.Model):
-    _name = 'drip.marketing.email'
-    _description = 'Drip Marketing Email'
+    gap = fields.Integer(string='Gap (days)', default=0)
+    sequence = fields.Integer(help='Used to order the mails')
+    mail_chain_id = fields.Many2one('mailing.chain', string="Chain")
+    added_to_chain = fields.Boolean('Added to Mail Chain', default=False, tracking=1)
 
-    chain_id = fields.Many2one('drip.marketing.chain', string='Chain', required=True)
-    subject = fields.Char(string='Subject', required=True)
-    content = fields.Html(string='Content', required=True)
-    gap_duration = fields.Integer(string='Gap Duration (in hours)', required=True)
+    def max_sequence_mailing(self):
+        self.env.cr.execute("SELECT MAX(sequence) FROM mailing_mailing")
+        print("self.env.cr.fetchall()", self.env.cr.fetchall())
+        max_sequence = self.env.cr.fetchall()[0][0]
+        if not max_sequence:
+            max_sequence = 0
+        else:
+            max_sequence += 1
+        print("max_sequence", max_sequence)
+        return max_sequence
 
     @api.model
-    def process_emails(self):
-        # Get the current time
-        now = fields.Datetime.now()
+    def create(self, vals):
+        record = super(MailingMailing, self).create(vals)
+        print(record.sequence)
+        record.sequence = self.max_sequence_mailing()
+        print("record sequence", record.sequence)
+        return record
 
-        # Find all the mailing list contacts
-        contacts = self.env['mailing.contact'].search([])
+    def unlink(self):
+        for record in self:
+            mailing_mailing = self.env['mailing.mailing'] \
+                .search([('sequence', '>', record.sequence)])
+            for mailing in mailing_mailing:
+                mailing.write({'sequence': mailing.sequence - 1})
+        return super(MailingMailing, self).unlink()
 
-        for contact in contacts:
-            # Find the associated chain for the contact's mailing list
-            chain = self.env['drip.marketing.chain'].search([('mailing_list_id', '=', contact.list_id.id)], limit=1)
 
-            if chain:
-                # Find the emails that need to be sent to the contact based on the Gap interval
-                emails_to_send = self.search([
-                    ('chain_id', '=', chain.id),
-                    ('gap_duration', '<=', tools.datetime.timedelta(hours=now - contact.create_date).total_seconds()
-            ])
+    def delete_from_chain(self):
+        self.mail_chain_id = False
+        self.added_to_chain = False
 
-            for email in emails_to_send:
-                # Check if the email has already been sent to the contact
-                existing_mail = self.env['mail.mail'].search([
-                    ('recipient_ids', 'in', [contact.id]),
-                    ('subject', '=', email.subject)
-                ])
 
-                # Send the email if it hasn't been sent yet
-                if not existing_mail:
-                    self.env['mail.mail'].create({
-                        'subject': email.subject,
-                        'body_html': email.content,
-                        'email_to': contact.email,
-                        'recipient_ids': [(4, contact.id)],
-                        'mailing_id': chain.mailing_list_id.mailing_id.id
-                    }).send()
+class MailingChain(models.Model):
+    _name = 'mailing.chain'
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+
+    name = fields.Char('Name', tracking=1, required=1)
+    description = fields.Text('Description', tracking=1)
+    mailing_ids = fields.One2many('mailing.mailing', 'mail_chain_id')
+    active = fields.Boolean('Active', default=True)
+
+    def activate(self):
+        self.active = True
+
+    def deactivate(self):
+        self.active = False
+
+    def add_to_chain(self):
+        if self.mailing_ids:
+            for i in self.mailing_ids:
+                i.sudo().write({'added_to_chain': True})
+        else:
+            raise UserError("No Mailings to add to the chain")
+
+    def remove_from_chain(self):
+        if self.mailing_ids:
+            for i in self.mailing_ids:
+                i.sudo().write({'added_to_chain': False})
+        else:
+            raise UserError("No Mailings to remove from the chain")
+
+    def send_mail(self):
+        if self.mailing_ids:
+            for i in self.mailing_ids:
+                i.sudo().send_mail()
+        else:
+            raise UserError("No Mailings to send")

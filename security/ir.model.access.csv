@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mailing_chain,access_mailing_chain,model_mailing_chain,base.group_user,1,1,1,1
+access_add_to_chain,access_add_to_mini_batch,model_add_to_chain,base.group_user,1,1,1,1
+access_add_to_existing_mail_chain,access_add_to_existing_mini_batch,model_add_to_existing_mail_chain,base.group_user,1,1,1,1
+
+
