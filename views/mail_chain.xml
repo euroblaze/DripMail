@@ -24,16 +24,28 @@
                                 <field name="name"/>
                             </h1>
                         </div>
+
                         <group>
                             <field name="description"/>
+                        </group>
+
+                        <group>
+                            <div class="col-xs-12 col-md-9 pt-1">
+                                <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
+                                <field name="contact_list_ids" widget="many2many_tags"
+                                       placeholder="Select mailing lists..." class="oe_inline"
+                                       context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
+                                />
+                            </div>
                         </group>
                         <notebook>
                             <page string="Mailling" name="Mails">
                                 <field name="mailing_ids" widget="one2many" nolabel="1">
                                     <tree import="false" string="Mails" editable="bottom" delete="false"
-                                          limit="1000">
+                                          limit="1000" create="false">
                                         <field string="Name" name="subject" readonly="1"/>
                                         <field string="Gap" name="gap"/>
+                                        <field string="Date" name="gap_schedule_date"/>
                                         <field string="Sequence" name="sequence"/>
                                         <button name="delete_from_chain" icon="fa-hand-pointer-o"
                                                 class="oe_inline oe_link"
@@ -79,13 +91,11 @@
             <field name="name">Mailing Chain</field>
             <field name="res_model">mailing.chain</field>
             <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
-
+            <field name="domain">[('active', '=', True)]</field>
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem name="Chains" id="menu_mailing_chain" parent="drip_mail_chain.drip_marketing_tool_menu_root"
                   groups="base.group_user"
                   action="action_mailing_chain_action" sequence="10"/>
-
-
     </data>
 </odoo>

@@ -14,7 +14,7 @@ class AddToMailingChain(models.TransientModel):
         tickets = self.env['mailing.mailing'].browse(self._context.get('active_ids', []))
 
         if set(tickets.mapped('added_to_chain')) != {False}:
-            raise ValidationError("Selected Mini Batches already been linked to mini Batch")
+            raise ValidationError("Selected Mails already been linked to Chain")
 
         else:
 

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Drip Marketing Tool menu item under Email Marketing module -->
-
     <record id="drip_marketing_tool_action" model="ir.actions.act_window">
         <field name="name">Mail Chains</field>
         <field name="res_model">mailing.mailing</field>

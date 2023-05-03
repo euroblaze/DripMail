@@ -1,11 +1,9 @@
 from odoo import fields, models, api
-# from odoo.exceptions import ValidationError
-# from datetime import date
 
 class AddToExistingMailChain(models.TransientModel):
     _name = 'add.to.existing.mail.chain'
 
-    mailing_chain_name = fields.Many2one('mailing.chain')
+    mailing_chain_name = fields.Many2one('mailing.chain', domain=[('active', '=', True)])
 
     def addtoexsistingchain(self):
         tickets = self.env['mailing.mailing'].browse(self._context.get('active_ids', []))
