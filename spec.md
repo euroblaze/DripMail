@@ -7,6 +7,8 @@
 The purpose of this document is to outline the software requirements for an Odoo-based Drip Marketing Tool. 
 This tool will be built on the existing email marketing module provided by Odoo, leveraging automated and/or scheduled actions to enable a seamless drip marketing experience.
 
+This module requires the [Contact2MailingList]([url](https://github.com/euroblaze/Contact2MailingList)) module.
+
 ### 1.2 Scope
 
 This document describes the functional and non-functional requirements for the drip marketing module, 
