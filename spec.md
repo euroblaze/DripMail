@@ -34,9 +34,9 @@ The system shall allow marketers to create a new Chain by providing the followin
 
 The system shall allow marketers to add emails to a Chain. Each email shall have the following attributes:
 
-- Email subject
-- Email content (HTML or plain text)
-- Preview (same as preview of Settings > Technical > Email-Templates)
+- Email subject (default Odoo)
+- Email content (HTML or plain text,  default Odoo)
+- Preview (same as preview of Settings > Technical > Email-Templates, default Odoo)
 - Gap duration (time between this email and the previous email in the chain)
 
 #### 3.1.3 Edit Chain
@@ -61,10 +61,10 @@ The system shall allow marketers to edit the attributes of an email in a Chain, 
 
 #### 3.2.1 Associate Mailing List with Chain
 
-The tool shall allow marketers to associate a mailing list (List) with a Chain.
-Odoo provides comprehensive List management.
-Consider related modules [like Contact2MailingList](https://github.com/euroblaze/Contact2MailingList), which adds Odoo Contacts automatically to Lists.
-When a user joins the List, they will automatically begin receiving emails from the associated Chain.
+1. The tool shall allow marketers to associate a mailing list (List) with a Chain.
+   Odoo provides comprehensive List management.
+2. Ensure tntegration with related modules [like Contact2MailingList](https://github.com/euroblaze/Contact2MailingList), which adds Odoo Contacts automatically to Lists.
+3. When a user joins the List, they will automatically begin receiving emails from the associated Chain.
 
 #### 3.2.2 Disassociate Mailing List from Chain
 
@@ -103,7 +103,7 @@ Marketer creates a Chain called "Product Onboarding" with the following emails:
 2. "Getting Started with Product Features" - Gap: 2 days
 3. "Advanced Tips and Tricks" - Gap: 5 days
 4. "Customer Success Stories" - Gap: 7 days
-5. "Exclusive Offer for New Users" - Gap: 10 days
+5. "Exclusive Offer for New Users" - Gap: 4 days
 
 Marketer associates the "Product Onboarding" Chain with a mailing list called "New Subscribers."
 
