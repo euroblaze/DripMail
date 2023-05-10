@@ -40,14 +40,17 @@
                         </group>
                         <notebook>
                             <page string="Mailling" name="Mails">
-                                <field name="mailing_ids" widget="one2many" nolabel="1">
-                                    <tree import="false" string="Mails" editable="bottom" delete="false"
-                                          limit="1000" create="false">
+                                <field name="mailing_ids" widget="one2many" nolabel="1" options="{'no_create': True}">
+                                    <tree string="Mails" delete="false" editable="top" create="false">
+                                        <button name="open_mail_from_chain" icon="fa-hand-pointer-o"
+                                                class="oe_inline oe_link"
+                                                string="Open Mail"
+                                                type="object"/>
                                         <field string="Name" name="subject" readonly="1"/>
                                         <field string="Gap" name="gap"/>
-                                        <field string="Date" name="gap_schedule_date"/>
+                                        <field string="Date" name="gap_schedule_date" readonly="1"/>
                                         <field string="Sequence" name="sequence"/>
-                                        <button name="delete_from_chain" icon="fa-hand-pointer-o"
+                                        <button name="delete_from_chain" icon="fa-trash"
                                                 class="oe_inline oe_link"
                                                 string="Delete Mail"
                                                 type="object"/>
