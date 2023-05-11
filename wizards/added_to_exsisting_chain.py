@@ -1,5 +1,6 @@
 from odoo import fields, models
 
+
 class AddToExistingMailChain(models.TransientModel):
     _name = 'add.to.existing.mail.chain'
 

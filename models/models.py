@@ -17,6 +17,12 @@ class MailingMailing(models.Model):
                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]},
                                     compute='_compute_schedule_date', store=True, copy=True)
 
+    def unlink(self):
+        if not self.mail_chain_id:
+            return super(MailingMailing, self).unlink()
+        else:
+            raise UserError(_("You can't delete a mail that is part of a chain"))
+
     @api.model
     def _process_mass_mailing_queue_job_tasks(self):
         for mass_mailing in self:
@@ -48,6 +54,7 @@ class MailingMailing(models.Model):
         for mailing in self:
             if mailing.schedule_type == 'now' or not mailing.schedule_date:
                 mailing.schedule_date = False
+
 
     @api.constrains('mail_chain_id')
     def added_to_chain_sequence_logic(self):
@@ -107,6 +114,14 @@ class MailingChain(models.Model):
     active = fields.Boolean('Active', default=True)
     contact_list_ids = fields.Many2many('mailing.list', 'mail_chain_list_rel', string='Mailing Lists', required=True,
                                         tracking=1)
+
+    def unlink(self):
+        if not self.active:
+            for mail in self.mailing_ids:
+                mail.delete_from_chain()
+            return super(MailingChain, self).unlink()
+        else:
+            raise UserError(_("You can't delete a Active Mail Chain"))
 
     @api.constrains('contact_list_ids')
     def contact_list_ids_constrains(self):

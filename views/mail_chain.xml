@@ -10,15 +10,15 @@
                         <button name="activate"
                                 string="Activate"
                                 type="object"
+                                attrs="{'invisible': [('active','=',True)]}"
                                 class="btn-primary"/>
                         <button name="deactivate"
                                 string="Deactivate"
                                 type="object"
+                                attrs="{'invisible': [('active','=',False)]}"
                                 class="btn-primary"/>
                     </header>
                     <sheet>
-
-
                         <div class="oe_title">
                             <h1>
                                 <field name="name"/>
@@ -26,6 +26,7 @@
                         </div>
 
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="description"/>
                         </group>
 
@@ -44,7 +45,7 @@
                                     <tree string="Mails" delete="false" editable="top" create="false">
                                         <button name="open_mail_from_chain" icon="fa-hand-pointer-o"
                                                 class="oe_inline oe_link"
-                                                string="Open Mail"
+                                                string="Open &amp; Edit Mail"
                                                 type="object"/>
                                         <field string="Name" name="subject" readonly="1"/>
                                         <field string="Gap" name="gap"/>
@@ -52,10 +53,9 @@
                                         <field string="Sequence" name="sequence"/>
                                         <button name="delete_from_chain" icon="fa-trash"
                                                 class="oe_inline oe_link"
-                                                string="Delete Mail"
+                                                string="Delete Mail From Chain"
                                                 type="object"/>
                                     </tree>
-
                                 </field>
                             </page>
                         </notebook>
