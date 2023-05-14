@@ -32,6 +32,8 @@ class MailingMailing(models.Model):
                 if len(mass_mailing._get_remaining_recipients()) > 0:
                     mass_mailing.state = 'sending'
                     mass_mailing.action_send_mail()
+
+                    mass_mailing.with_delay(eta=60 * 60 * 24 * int(mass_mailing.gap)).action_send_mail()
                 else:
                     mass_mailing.write({
                         'state': 'done',
@@ -140,7 +142,7 @@ class MailingChain(models.Model):
         for chain in self.search([]):
             if chain.mailing_ids:
                 for i in chain.mailing_ids:
-                    i.sudo().with_delay()._process_mass_mailing_queue_job_tasks()
+                    i.sudo()._process_mass_mailing_queue_job_tasks()
 
     def func_update_chain_mails(self):
         if self.mailing_ids:
