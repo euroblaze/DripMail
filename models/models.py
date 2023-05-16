@@ -2,6 +2,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+from odoo.addons.queue_job.job import identity_exact
 
 class MailingMailing(models.Model):
     _inherit = 'mailing.mailing'
@@ -26,19 +27,21 @@ class MailingMailing(models.Model):
     @api.model
     def _process_mass_mailing_queue_job_tasks(self):
         for mass_mailing in self:
-            if mass_mailing.schedule_date < fields.Datetime.now() or not mass_mailing.schedule_date:
-                user = mass_mailing.write_uid or self.env.user
-                mass_mailing = mass_mailing.with_context(**user.with_user(user).context_get())
-                if len(mass_mailing._get_remaining_recipients()) > 0:
+            remaining_recipients = mass_mailing._get_remaining_recipients()
+            user = mass_mailing.write_uid or self.env.user
+            mass_mailing = mass_mailing.with_context(**user.with_user(user).context_get())
+            if len(remaining_recipients) > 0:
+                for recipient in remaining_recipients:
                     mass_mailing.state = 'sending'
-                    mass_mailing.with_delay(eta=60 * 60 * 24 * int(mass_mailing.gap)).action_send_mail()
-                else:
-                    mass_mailing.write({
-                        'state': 'done',
-                        'sent_date': fields.Datetime.now(),
-                        # send the KPI mail only if it's the first sending
-                        'kpi_mail_required': not mass_mailing.sent_date,
-                    })
+                    mass_mailing.with_delay(eta=60 * 60 * 24 * int(mass_mailing.gap),
+                                            identity_key=identity_exact).action_send_mail(res_ids=[recipient])
+            else:
+                mass_mailing.write({
+                    'state': 'done',
+                    'sent_date': fields.Datetime.now(),
+                    # send the KPI mail only if it's the first sending
+                    'kpi_mail_required': not mass_mailing.sent_date,
+                })
 
         mailings = self.env['mailing.mailing'].search([
             ('kpi_mail_required', '=', True),
