@@ -33,7 +33,7 @@ class MailingMailing(models.Model):
             if len(remaining_recipients) > 0:
                 for recipient in remaining_recipients:
                     mass_mailing.state = 'sending'
-                    mass_mailing.with_delay(eta=60 * 60 * 24 * int(mass_mailing.gap),
+                    mass_mailing.with_delay(eta=60 * 60 * int(mass_mailing.gap),
                                             identity_key=identity_exact).action_send_mail(res_ids=[recipient])
             else:
                 mass_mailing.write({
@@ -77,7 +77,7 @@ class MailingMailing(models.Model):
             chain_sorted_mails = self.mail_chain_id.mailing_ids.sorted(key='sequence', reverse=False)
             if chain_sorted_mails:
                 # gap duration in days is the time between the current mail and the previous mail in the chain
-                gap_duration = self.gap * 24 * 60 * 60
+                gap_duration = self.gap * 60 * 60
                 # get the previous mail in the chain
                 previous_mail = chain_sorted_mails.filtered(lambda l: l.sequence == self.sequence - 1)
                 if previous_mail:
@@ -153,7 +153,7 @@ class MailingChain(models.Model):
                 elif i.gap > 0 and i.sequence >= 1:
                     chain_sorted_mails = i.mail_chain_id.mailing_ids.sorted(key='sequence', reverse=False)
                     if chain_sorted_mails:
-                        gap_duration = i.gap * 24 * 60 * 60
+                        gap_duration = i.gap * 60 * 60
                         previous_mail = chain_sorted_mails.filtered(lambda l: l.sequence == i.sequence - 1)
                         if previous_mail:
                             previous_mail_schedule_date = previous_mail.schedule_date
